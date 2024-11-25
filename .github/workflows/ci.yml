@@ -2,10 +2,10 @@ name: backend-financeiro-ci
 
 on:
   push:
-    branches: [main, devel]
+    branches: [master, devel]
   pull_request:
     branches:
-      - main
+      - master
       - devel
     types: [opened, synchronize, reopened]
 
