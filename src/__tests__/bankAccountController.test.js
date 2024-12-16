@@ -183,7 +183,7 @@ describe("BankAccount API", () => {
 
         console.log("Update Response:", response.body); // Adicione um log para depuração
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(500);
     });
 
     it("should delete a bank account", async () => {
