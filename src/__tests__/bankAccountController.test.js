@@ -226,3 +226,61 @@ describe("BankAccount API", () => {
         expect(response.status).toBe(404);
     });
 });
+it("should return 500 when fetching a bank account with invalid ID", async () => {
+    const response = await request(app).get(`/finance/bankAccount/${null}`);
+
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe("ID inválido ou ausente");
+});
+it("should return 500 when updating a bank account with invalid ID", async () => {
+    const response = await request(app)
+        .patch(`/finance/updateBankAccount/${null}`)
+        .send({ name: "Conta Atualizada" });
+
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe("ID inválido ou ausente");
+});
+    it("should delete a bank account", async () => {
+    const newAccount = await request(app)
+        .post("/finance/createBankAccount")
+        .send({
+            formData: {
+                name: "Conta a ser Deletada",
+                bank: "Banco Teste Deletar",
+                
+                accaccountNumber: "33333333",
+                status: "Ativo",
+                accountType: "Conta Corrente",
+            },
+        }); const response = await request(app).delete(
+            `/finance/deleteBankAccount/${newAccount.body._id}`
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe("Conta deletada com sucesso");
+    });
+
+    it("should return 500 when deleting a bank account with invalid ID", async () => {
+        const response = await request(app).delete(`/finance/deleteBankAccount/${null}`);
+
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe("ID inválido ou ausente");
+    });
+
+    it("should return 500 if the name is invalid", async () => {
+        const response = await request(app)
+            .post("/finance/createBankAccount")
+            .send({
+                formData: {
+                    name: 12345, // Tipo inválido
+                    bank: "Banco Teste",
+                    accountNumber: "98765432",
+                    status: "Ativo",
+                    accountType: "Conta Corrente",
+                },
+            });
+
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe("Tipo de dado incorreto");
+    });
+   

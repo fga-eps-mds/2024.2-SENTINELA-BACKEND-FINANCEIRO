@@ -54,17 +54,17 @@ const getBankAccountbyId = async (req, res) => {
         if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return res.status(500).send({ error: "ID inválido ou ausente" });
         }
-        const bankAccount = await BankAccount.findById(req.params.id); // Buscando conta pelo ID
+        const bankAccount = await BankAccount.findById(id); // Buscando conta pelo ID
         if (!bankAccount) {
-            return res.status(404).send({ message: "Conta não encontrada" }); // Enviando mensagem de erro se a conta não for encontrada
+            return res.status(404).send({ message: "Conta não encontrada" });
         }
         res.status(200).json(bankAccount); // Enviando conta bancária encontrada
     } catch (error) {
-        // Log do erro para depuração
         console.error("Erro ao buscar conta bancária:", error.message);
-        res.status(500).send({ error: error.message }); // Enviando mensagem de erro
+        res.status(500).send({ error: error.message || "Erro interno" }); // Garantindo que a resposta tenha a chave 'error'
     }
 };
+
 
 const deleteBankAccount = async (req, res) => {
     try {
