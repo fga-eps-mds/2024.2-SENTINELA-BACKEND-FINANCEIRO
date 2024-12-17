@@ -50,20 +50,30 @@ const getAll = async (req, res) => {
 
 const getBankAccountbyId = async (req, res) => {
     try {
-        const bankAccount = await BankAccount.findById(req.params.id); // Buscando conta pelo ID
+        const { id } = req.params;
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(500).send({ error: "ID inválido ou ausente" });
+        }
+        const bankAccount = await BankAccount.findById(id); // Buscando conta pelo ID
         if (!bankAccount) {
-            return res.status(404).send({ message: "Conta não encontrada" }); // Enviando mensagem de erro se a conta não for encontrada
+            return res.status(404).send({ message: "Conta não encontrada" });
         }
         res.status(200).json(bankAccount); // Enviando conta bancária encontrada
     } catch (error) {
-        // Log do erro para depuração
         console.error("Erro ao buscar conta bancária:", error.message);
-        res.status(500).send({ error: error.message }); // Enviando mensagem de erro
+        res.status(500).send({ error: error.message || "Erro interno" }); // Garantindo que a resposta tenha a chave 'error'
     }
 };
 
+
 const deleteBankAccount = async (req, res) => {
     try {
+
+        const { id } = req.params;
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(500).send({ error: "ID inválido ou ausente" });
+        }
         const bankAccount = await BankAccount.findByIdAndDelete(req.params.id); // Deletando conta pelo ID
         if (!bankAccount) {
             return res.status(404).send({ message: "Conta não encontrada" }); // Enviando mensagem de erro se a conta não for encontrada
@@ -79,8 +89,8 @@ const deleteBankAccount = async (req, res) => {
 const updateBankAccount = async (req, res) => {
     try {
         const { id } = req.params;
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).send({ message: "ID inválido" });
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(500).send({ error: "ID inválido ou ausente" });
         }
 
         // Log dos dados recebidos

@@ -169,4 +169,97 @@ describe("FinancialMovements API", () => {
 
         expect(res.status).toBe(200);
     });
+
+    it("should reject creating financial movement with missing data", async () => {
+        const res = await request(app)
+            .post("/financialMovements/create")
+            .send({}); // Enviar dados incompletos
+    
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty("error");
+    });
+    it("should return 404 if financial movement not found on GET by ID", async () => {
+        const nonExistingId = "60f8e8b1d3b99c4b8c6c3bbd"; // ID fictício
+        const res = await request(app).get(`/financialMovements/${nonExistingId}`);
+    
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty("error", "Financial Movement not found");
+    });
+    
+    it("should return 404 if financial movement not found on DELETE", async () => {
+        const nonExistingId = "60f8e8b1d3b99c4b8c6c3bbd"; // ID fictício
+        const res = await request(app).delete(`/financialMovements/delete/${nonExistingId}`);
+    
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty("error", "Financial Movement not found");
+    });
+    it("should update a financial movement with partial data", async () => {
+        const { body: createdFMovements } = await request(app)
+            .post("/financialMovements/create")
+            .send({
+                financialMovementsData: {
+                    contaOrigem: "12345",
+                    contaDestino: "67890",
+                    nomeOrigem: "João Silva",
+                    nomeDestino: "Maria Souza",
+                    tipoDocumento: "Transferência",
+                    cpFCnpj: "123.456.789-00",
+                    valorBruto: 1000,
+                    valorLiquido: 950,
+                    acrescimo: 50,
+                    desconto: 0,
+                    formadePagamento: "PIX",
+                    datadeVencimento: new Date(),
+                    datadePagamento: new Date(),
+                    baixada: false,
+                    descricao: "Pagamento de serviço",
+                },
+            });
+    
+        const updatedData = {
+            nomeOrigem: "João Silva Atualizado",
+            valorBruto: 1200,
+        };
+    
+        const res = await request(app)
+            .patch(`/financialMovements/update/${createdFMovements._id}`)
+            .send({ financialMovementsData: updatedData });
+    
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("nomeOrigem", "João Silva Atualizado");
+        expect(res.body).toHaveProperty("valorBruto", 1200);
+    });
+
+    it("should update 'baixada' status", async () => {
+        const { body: createdFMovements } = await request(app)
+            .post("/financialMovements/create")
+            .send({
+                financialMovementsData: {
+                    contaOrigem: "12345",
+                    contaDestino: "67890",
+                    nomeOrigem: "João Silva",
+                    nomeDestino: "Maria Souza",
+                    tipoDocumento: "Transferência",
+                    cpFCnpj: "123.456.789-00",
+                    valorBruto: 1000,
+                    valorLiquido: 950,
+                    acrescimo: 50,
+                    desconto: 0,
+                    formadePagamento: "PIX",
+                    datadeVencimento: new Date(),
+                    datadePagamento: new Date(),
+                    baixada: false,
+                    descricao: "Pagamento de serviço",
+                },
+            });
+    
+        const res = await request(app)
+            .patch(`/financialMovements/update/${createdFMovements._id}`)
+            .send({ financialMovementsData: { baixada: true } });
+    
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("baixada", true);
+    });
+        
+                
 });

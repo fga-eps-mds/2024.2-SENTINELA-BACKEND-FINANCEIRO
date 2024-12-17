@@ -61,13 +61,26 @@ const generateFinancialReport = async (req, res) => {
         const sanitizedTipoDocumento = sanitizeInput(tipoDocumento);
         const sanitizedSitPagamento = sanitizeInput(sitPagamento);
 
-        const query = {};
+        const query = {
+            sitPagamento: sanitizedSitPagamento,
+            datadeVencimento: {
+            $gte: new Date(dataInicio),
+            $lte: new Date(dataFinal),
+            }
+        };
         if (sanitizedNomeOrigem) query.nomeOrigem = sanitizedNomeOrigem;
         if (sanitizedContaOrigem) query.contaOrigem = sanitizedContaOrigem;
         if (sanitizedContaDestino) query.contaDestino = sanitizedContaDestino;
         if (sanitizedTipoDocumento)
             query.tipoDocumento = sanitizedTipoDocumento;
         if (sanitizedNomeDestino) query.nomeDestino = sanitizedNomeDestino;
+        if (req.body.contaDestino) {
+            query.contaDestino = req.body.contaDestino;
+        }
+        if (req.body.contaOrigem) {
+            query.contaOrigem = req.body.contaOrigem;
+        }
+        
         if (sanitizedSitPagamento) {
             const today = new Date(); // Data atual
 
@@ -80,6 +93,8 @@ const generateFinancialReport = async (req, res) => {
                     { datadePagamento: { $eq: null } },
                     { datadePagamento: { $gt: today } },
                 ];
+            }else {
+                delete query.datadePagamento;
             }
         }
 

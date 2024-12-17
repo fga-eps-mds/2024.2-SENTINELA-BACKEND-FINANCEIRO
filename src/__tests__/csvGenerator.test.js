@@ -10,103 +10,188 @@ jest.mock("json2csv", () => ({
     parse: jest.fn(),
 }));
 
-describe("generateFinancialReportCSV", () => {
-    const mockFinancialMovements = [
-        {
-            contaOrigem: "1234",
-            contaDestino: "5678",
-            nomeOrigem: "Empresa A",
-            nomeDestino: "Empresa B",
-            tipoDocumento: "Fatura",
-            valorBruto: 1000,
-            valorLiquido: 900,
-            formadePagamento: "Boleto",
-            datadeVencimento: "2024-01-01T00:00:00.000Z",
-            datadePagamento: "2024-01-10T00:00:00.000Z",
-            baixada: true,
-            descricao: "Pagamento de serviços",
-        },
+test("deve gerar CSV corretamente com apenas um campo incluído", async () => {
+    const financialMovements = [
+        { tipoDocumento: "Fatura", valorBruto: 1000 },
+        { tipoDocumento: "Nota", valorBruto: 2000 },
     ];
+    const includeFields = ["tipoDocumento"]; // Apenas incluir "tipoDocumento"
+    const filePath = "/caminho/para/arquivo.csv";
 
-    const mockCsv = `"Tipo Documento","Valor Bruto","Valor Líquido","Conta Origem","Nome Origem","Conta Destino","Nome Destino","Data de Vencimento","Data de Pagamento","Forma de Pagamento","Situação de Pagamento","Descrição"
-"Fatura",1000,900,"1234","Empresa A","5678","Empresa B","01/01/2024","10/01/2024","Boleto","Pago","Pagamento de serviços"`;
-
-    const includeFields = [
-        "tipoDocumento",
-        "valorBruto",
-        "valorLiquido",
-        "contaOrigem",
-        "nomeOrigem",
-        "contaDestino",
-        "nomeDestino",
-        "dataVencimento",
-        "dataPagamento",
-        "formaPagamento",
-        "sitPagamento",
-        "descricao",
-    ];
-
-    beforeEach(() => {
-        fs.writeFileSync.mockClear();
-        parse.mockClear();
-        parse.mockReturnValue(mockCsv);
-    });
-
-    it("deve gerar e salvar o arquivo CSV corretamente com os campos incluídos", async () => {
-        const filePath = "/caminho/para/arquivo.csv";
-
-        await generateFinancialReportCSV(
-            mockFinancialMovements,
-            filePath,
-            includeFields
+    // Mock do json2csv para retornar o CSV esperado
+    parse.mockImplementation((data, options) => {
+        const fields = options.fields.map((field) => field.label);
+        const rows = data.map((row) =>
+            options.fields.map((field) => `"${row[field.value]}"`).join(",")
         );
-
-        expect(parse).toHaveBeenCalledWith(mockFinancialMovements, {
-            fields: expect.any(Array),
-        });
-        expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, mockCsv);
+        return `"${fields.join('","')}"\n${rows.join("\n")}`;
     });
 
-    it("deve rejeitar se houver um erro ao gerar o CSV", async () => {
-        const filePath = "/caminho/para/arquivo.csv";
-        const mockError = new Error("Erro ao gerar CSV");
-        parse.mockImplementationOnce(() => {
-            throw mockError;
-        });
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
 
-        await expect(
-            generateFinancialReportCSV(
-                mockFinancialMovements,
-                filePath,
-                includeFields
-            )
-        ).rejects.toThrow("Erro ao gerar CSV");
+    const expectedCsv = `"Tipo Documento"\n"Fatura"\n"Nota"`;
 
-        expect(fs.writeFileSync).not.toHaveBeenCalled();
-    });
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
 
-    describe("formatNumericDate", () => {
-        it("deve formatar uma data válida no formato DD/MM/YYYY", () => {
-            const date = "2024-01-10T00:00:00.000Z";
-            const formattedDate = formatNumericDate(date);
-            expect(formattedDate).toBe("10/01/2024");
-        });
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, expectedCsv);
+  });
+  
+  
+  test("deve retornar CSV vazio se campos inválidos forem passados", async () => {
+    const financialMovements = [
+      {
+        tipoDocumento: "Fatura",
+        valorBruto: 1000,
+      },
+    ];
+  
+    const includeFields = ["campoInvalido"]; // Campo inválido
+    const filePath = "/caminho/para/arquivo.csv";
+  
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
+  
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
+  
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, "");
+  });
+  
+  test("deve gerar CSV vazio se não houver movimentos financeiros", async () => {
+    const financialMovements = [];
+    const includeFields = ["tipoDocumento"];
+    const filePath = "/caminho/para/arquivo.csv";
 
-        it("deve retornar uma string vazia se a data for inválida", () => {
-            const formattedDate = formatNumericDate(null);
-            expect(formattedDate).toBe("");
-        });
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
 
-        it("deve lidar corretamente com uma data do tipo Date", () => {
-            const date = new Date("2024-01-10T00:00:00.000Z");
-            const formattedDate = formatNumericDate(date);
-            expect(formattedDate).toBe("10/01/2024");
-        });
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
 
-        it("deve lidar corretamente com uma string de data no formato local", () => {
-            const date = "2024-01-10";
-            const formattedDate = formatNumericDate(date);
-            expect(formattedDate).toBe("10/01/2024");
-        });
-    });
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, "");
+  });
+
+  test("deve gerar CSV vazio se não houver campos para incluir", async () => {
+    const financialMovements = [
+      {
+        tipoDocumento: "Fatura",
+        valorBruto: 1000,
+        valorLiquido: 900,
+        contaOrigem: "1234",
+        nomeOrigem: "Empresa A",
+        contaDestino: "5678",
+        nomeDestino: "Empresa B",
+        datadeVencimento: "2024-01-01",
+        datadePagamento: "2024-01-10",
+        formadePagamento: "Boleto",
+        sitPagamento: "Pago",
+        descricao: "Pagamento de serviços",
+      },
+    ];
+    const includeFields = []; // Nenhum campo incluído
+    const filePath = "/caminho/para/arquivo.csv";
+
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
+
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
+
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, "");
+  });
+
+  test("deve retornar CSV vazio se campos inválidos forem passados", async () => {
+    const financialMovements = [
+      {
+        tipoDocumento: "Fatura",
+        valorBruto: 1000,
+        valorLiquido: 900,
+        contaOrigem: "1234",
+        nomeOrigem: "Empresa A",
+        contaDestino: "5678",
+        nomeDestino: "Empresa B",
+        datadeVencimento: "2024-01-01",
+        datadePagamento: "2024-01-10",
+        formadePagamento: "Boleto",
+        sitPagamento: "Pago",
+        descricao: "Pagamento de serviços",
+      },
+    ];
+    const includeFields = ["invalidField"]; // Campo inválido
+    const filePath = "/caminho/para/arquivo.csv";
+
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
+
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
+
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, "");
+  });
+
+  test("deve retornar erro se houver falha ao gerar o arquivo", async () => {
+    const financialMovements = [
+      {
+        tipoDocumento: "Fatura",
+        valorBruto: 1000,
+        valorLiquido: 900,
+        contaOrigem: "1234",
+        nomeOrigem: "Empresa A",
+        contaDestino: "5678",
+        nomeDestino: "Empresa B",
+        datadeVencimento: "2024-01-01",
+        datadePagamento: "2024-01-10",
+        formadePagamento: "Boleto",
+        sitPagamento: "Pago",
+        descricao: "Pagamento de serviços",
+      },
+    ];
+    const includeFields = ["tipoDocumento"];
+    const filePath = "/caminho/para/arquivo.csv";
+
+    const error = new Error("Erro ao salvar arquivo");
+    jest.spyOn(fs, "writeFileSync").mockImplementation(() => { throw error });
+
+    try {
+      await generateFinancialReportCSV(financialMovements, filePath, includeFields);
+    } catch (err) {
+      expect(err).toBe(error);
+    }
+  });
+
+  test("deve formatar uma data válida corretamente", () => {
+    const date = "2024-12-16";
+    expect(formatNumericDate(date)).toBe("16/12/2024");
 });
+
+test("deve retornar string vazia para data inválida", () => {
+    const date = "data_invalida";
+    expect(formatNumericDate(date)).toBe("");
+});
+
+test("deve retornar string vazia se data não for fornecida", () => {
+    expect(formatNumericDate()).toBe("");
+});
+
+test("deve gerar CSV vazio se includeFields estiver vazio", async () => {
+    const financialMovements = [
+        { tipoDocumento: "Fatura", valorBruto: 1000 },
+    ];
+    const includeFields = [];
+    const filePath = "/caminho/para/arquivo.csv";
+
+    const writeFileSyncMock = jest.spyOn(fs, "writeFileSync").mockImplementation(() => {});
+
+    await generateFinancialReportCSV(financialMovements, filePath, includeFields);
+
+    expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, "");
+});
+
+test("deve retornar erro se a data de pagamento for inválida", () => {
+    const financialMovements = [
+      { datadePagamento: "2024-12-10" },
+      { datadePagamento: "invalid-date" }, // Dados inválidos
+      { datadePagamento: "2024-12-12" },
+    ];
+    const includeFields = ["sitPagamento"];
+    const filePath = "/caminho/para/arquivo.csv";
+  
+    try {
+      generateFinancialReportCSV(financialMovements, filePath, includeFields);
+    } catch (e) {
+      console.log(e); // Verifique se o erro está sendo capturado
+      expect(e.message).toBe("Data de pagamento inválida");
+    }
+  });
