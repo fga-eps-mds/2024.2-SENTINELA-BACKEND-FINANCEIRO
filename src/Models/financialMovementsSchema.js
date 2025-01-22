@@ -19,7 +19,8 @@ const financialMovementsSchema = new mongoose.Schema({
     },
     tipoDocumento: {
         type: String,
-        required: true,
+        required: false,
+        default: 'Indefinido',
     },
     cpFCnpj: {
         type: String,
