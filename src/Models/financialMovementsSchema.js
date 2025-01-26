@@ -20,6 +20,7 @@ const financialMovementsSchema = new mongoose.Schema({
     tipoDocumento: {
         type: String,
         required: true,
+        default: " ",
     },
     cpFCnpj: {
         type: String,
@@ -77,6 +78,10 @@ const financialMovementsSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    gastoFixo:{
+        type: Boolean,
+        default: false,
+    }
 });
 
 const financialMovements = mongoose.model(
