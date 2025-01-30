@@ -70,7 +70,7 @@ mockedToken = () =>{
             "__v": 0
         },
     }
-    const token = jwt.sign(jwtTemp, process.env.SECRET ?? 'S3T1N3L3L4', {
+    const token = jwt.sign(jwtTemp, 'S3T1N3L3L4', {
         expiresIn: "30d",
     }); 
     return token.trim();

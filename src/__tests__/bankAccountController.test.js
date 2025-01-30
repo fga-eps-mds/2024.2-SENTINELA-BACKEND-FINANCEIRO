@@ -271,7 +271,6 @@ it("should delete a bank account", async () => {
             },
         });
         
-        console.log("TESTEEEEEEEEEEEEEEEE", newAccount.body)
         
         const response = await request(app).delete(
             `/finance/deleteBankAccount/${newAccount.body._id}`
