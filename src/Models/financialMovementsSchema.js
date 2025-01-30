@@ -78,10 +78,10 @@ const financialMovementsSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    gastoFixo:{
+    gastoFixo: {
         type: Boolean,
         default: false,
-    }
+    },
 });
 
 const financialMovements = mongoose.model(
