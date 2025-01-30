@@ -4,63 +4,91 @@ const bankAccountController = require("./Controllers/bankAccountController");
 const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
 const financialReportController = require("./Controllers/financialReportController");
+const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
-// Rotas Privadas (Comentadas por enquanto, você pode descomentar quando implementar a validação de token)
-// router.get('/finance', tokenValidation, ???.getUsers);
-// router.get('/finance/:id', tokenValidation, ???.getUserById);
 // Rotas Contas Bancárias
 routes.post(
     "/finance/createBankAccount",
+    checkPermissions("contas_bancarias_criar"),
     bankAccountController.createBankAccount
 );
 routes.get(
     "/finance/bankAccount/:id",
+    checkPermissions("contas_bancarias_visualizar"),
     bankAccountController.getBankAccountbyId
 );
 routes.delete(
     "/finance/deleteBankAccount/:id",
+    checkPermissions("contas_bancarias_deletar"),
     bankAccountController.deleteBankAccount
 );
 routes.patch(
     "/finance/updateBankAccount/:id",
+    checkPermissions("contas_bancarias_editar"),
     bankAccountController.updateBankAccount
 );
-routes.get("/finance/getBankAccount", bankAccountController.getAll);
+routes.get(
+    "/finance/getBankAccount",
+    checkPermissions("contas_bancarias_visualizar"),
+    bankAccountController.getAll
+);
 
 // Rotas Fornecedores
-routes.post("/SupplierForm/create", supplierFormController.createSupplierForm);
-routes.get("/SupplierForm", supplierFormController.getSupplierForm);
-routes.get("/SupplierForm/:id", supplierFormController.getSupplierFormById);
+routes.post(
+    "/SupplierForm/create",
+    checkPermissions("fornecedores_criar"),
+    supplierFormController.createSupplierForm
+);
+routes.get(
+    "/SupplierForm",
+    checkPermissions("fornecedores_visualizar"),
+    supplierFormController.getSupplierForm
+);
+routes.get(
+    "/SupplierForm/:id",
+    checkPermissions("fornecedores_visualizar"),
+    supplierFormController.getSupplierFormById
+);
 routes.delete(
     "/SupplierForm/delete/:id",
+    checkPermissions("fornecedores_deletar"),
     supplierFormController.deleteSupplierFormById
 );
 routes.patch(
     "/SupplierForm/update/:id",
+    checkPermissions("fornecedores_editar"),
     supplierFormController.updateSupplierFormById
 );
+
+// Rotas Movimentações Financeiras
 routes.post(
     "/financialMovements/create",
+    checkPermissions("movimentacao_financeira_criar"),
     financialMovementsController.createFinancialMovements
 );
 routes.get(
     "/financialMovements",
+    checkPermissions("movimentacao_financeira_visualizar"),
     financialMovementsController.getFinancialMovements
 );
 routes.get(
     "/financialMovements/:id",
+    checkPermissions("movimentacao_financeira_visualizar"),
     financialMovementsController.getFinancialMovementsById
 );
 routes.delete(
     "/financialMovements/delete/:id",
+    checkPermissions("movimentacao_financeira_deletar"),
     financialMovementsController.deleteFinancialMovementsById
 );
 routes.patch(
     "/financialMovements/update/:id",
+    checkPermissions("movimentacao_financeira_editar"),
     financialMovementsController.updateFinancialMovementsById
 );
 routes.post(
     "/financialMovements/report",
+    checkPermissions("movimentacao_financeira_visualizar"),
     financialReportController.generateFinancialReport
 );
 

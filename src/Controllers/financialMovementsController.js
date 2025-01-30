@@ -4,7 +4,6 @@ const validateCPF = (cpf) => {
     return /\d{3}\.\d{3}\.\d{3}-\d{2}/.test(cpf);
 };
 
-
 const createFinancialMovements = async (req, res) => {
     try {
         console.log("Dados recebidos:", req.body);

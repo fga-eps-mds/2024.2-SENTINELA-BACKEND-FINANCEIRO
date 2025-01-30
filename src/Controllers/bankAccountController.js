@@ -65,10 +65,8 @@ const getBankAccountbyId = async (req, res) => {
     }
 };
 
-
 const deleteBankAccount = async (req, res) => {
     try {
-
         const { id } = req.params;
 
         if (!id || !mongoose.Types.ObjectId.isValid(id)) {

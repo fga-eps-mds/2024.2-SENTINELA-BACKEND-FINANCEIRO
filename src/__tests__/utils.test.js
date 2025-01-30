@@ -1,4 +1,79 @@
 const { validator } = require("../Util/utils");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+mockedToken = () => {
+    let jwtTemp = {
+        id: "6783471ed9b501ccc074f977",
+        _id: "6783471ed9b501ccc074f96a",
+        name: "administrador",
+        permissions: [
+            "perfis_editar",
+            "perfis_deletar",
+            "perfis_visualizar",
+            "orgaos_criar",
+            "orgaos_editar",
+            "orgaos_deletar",
+            "orgaos_visualizar",
+            "fornecedores_criar",
+            "fornecedores_editar",
+            "fornecedores_deletar",
+            "fornecedores_visualizar",
+            "contas_bancarias_criar",
+            "contas_bancarias_editar",
+            "contas_bancarias_deletar",
+            "contas_bancarias_visualizar",
+            "movimentacao_financeira_criar",
+            "movimentacao_financeira_editar",
+            "movimentacao_financeira_deletar",
+            "movimentacao_financeira_visualizar",
+            "permissoes_criar",
+            "permissoes_editar",
+            "permissoes_deletar",
+            "permissoes_visualizar",
+            "beneficios_criar",
+            "beneficios_visualizar",
+            "beneficios_editar",
+            "beneficios_deletar",
+            "usuarios_visualizar",
+            "usuarios_editar",
+            "usuarios_deletar",
+            "usuarios_criar",
+            "create",
+            "read",
+            "update",
+            "delete",
+            "usuarios_visualizar_historico\t",
+            "associados_criar",
+            "associados_deletar",
+            "associados_editar",
+            "associados_visualizar",
+            "perfis_criar",
+            "filiados_cadastrar",
+            "usuarios_visualizar_historico",
+            "sindicalizado_visualizar_status",
+            "filiado_visualizar_carteirinha",
+        ],
+        user: {
+            situation: "",
+            description: "",
+            _id: "6783471ed9b501ccc074f977",
+            name: "Admin",
+            email: "admin@admin.com",
+            phone: "1234567890",
+            role: "6783471ed9b501ccc074f96a",
+            status: true,
+            isProtected: true,
+            createdAt: "2025-01-12T04:37:50.966Z",
+            updatedAt: "2025-01-12T04:37:50.966Z",
+            __v: 0,
+        },
+    };
+    const token = jwt.sign(jwtTemp, "S3T1N3L3L4", {
+        expiresIn: "30d",
+    });
+    return token.trim();
+};
 
 describe("Supplier Data Validator", () => {
     it("should return an error for invalid nome", () => {
@@ -136,3 +211,4 @@ describe("Supplier Data Validator", () => {
         expect(result).toBeNull();
     });
 });
+module.exports = { mockedToken };

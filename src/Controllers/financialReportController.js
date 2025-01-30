@@ -64,9 +64,9 @@ const generateFinancialReport = async (req, res) => {
         const query = {
             sitPagamento: sanitizedSitPagamento,
             datadeVencimento: {
-            $gte: new Date(dataInicio),
-            $lte: new Date(dataFinal),
-            }
+                $gte: new Date(dataInicio),
+                $lte: new Date(dataFinal),
+            },
         };
         if (sanitizedNomeOrigem) query.nomeOrigem = sanitizedNomeOrigem;
         if (sanitizedContaOrigem) query.contaOrigem = sanitizedContaOrigem;
@@ -80,7 +80,7 @@ const generateFinancialReport = async (req, res) => {
         if (req.body.contaOrigem) {
             query.contaOrigem = req.body.contaOrigem;
         }
-        
+
         if (sanitizedSitPagamento) {
             const today = new Date(); // Data atual
 
@@ -93,7 +93,7 @@ const generateFinancialReport = async (req, res) => {
                     { datadePagamento: { $eq: null } },
                     { datadePagamento: { $gt: today } },
                 ];
-            }else {
+            } else {
                 delete query.datadePagamento;
             }
         }
