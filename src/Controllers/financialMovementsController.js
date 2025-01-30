@@ -11,11 +11,11 @@ const createFinancialMovements = async (req, res) => {
         if (!financialMovementsData) {
             return res.status(400).send({ error: "No data provided" });
         }
-        if (!validateCPF(financialMovementsData.cpFCnpj)) {
-            return res.status(400).send({ error: "Invalid CPF" });
-        }
-        if (!financialMovementsData.contaOrigem) {
-            throw new Error("Database error");
+        /* if (!validateCPF(financialMovementsData.cpFCnpj)) {
+            return res.status(400).send({ error: "Invalid CPF" });  
+        } */
+        if (!financialMovementsData.contaOrigem) {  
+            throw new Error("Database error"); 
         }
 
         // Criação da movimentação financeira
