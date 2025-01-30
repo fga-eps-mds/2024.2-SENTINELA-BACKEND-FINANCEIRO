@@ -3,9 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const bankAccountRouter = require("../routes"); // Atualize o caminho para o arquivo de rotas
+const { mockedToken } = require('./utils.test')
+
 
 let mongoServer;
 let app = express();
+
+
 
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -24,10 +28,13 @@ afterAll(async () => {
     await mongoServer.stop();
 });
 
+
+
 describe("BankAccount API", () => {
-    it("should create a new bank account", async () => {
+    it("should create a new bank account", async () => {        
         const response = await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta Teste",
@@ -37,8 +44,6 @@ describe("BankAccount API", () => {
                     accountType: "Conta Corrente",
                 },
             });
-
-        console.log("Create Response:", response); // Adicione um log para depuração
 
         expect(response.status).toBe(201);
         expect(response.body).toHaveProperty("name", "Conta Teste");
@@ -46,7 +51,8 @@ describe("BankAccount API", () => {
 
     it("should not create a bank account with an existing name", async () => {
         await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta Teste",
@@ -58,7 +64,8 @@ describe("BankAccount API", () => {
             });
 
         const response = await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta Teste",
@@ -76,6 +83,7 @@ describe("BankAccount API", () => {
     it("should not create a bank account with a blank name", async () => {
         const response = await request(app)
             .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .set("Authorization", `Bearer ${mockedToken()}`)
             .send({
                 formData: {
                     name: "",
@@ -93,6 +101,7 @@ describe("BankAccount API", () => {
     it("should fetch a bank account by ID", async () => {
         const newAccount = await request(app)
             .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .set("Authorization", `Bearer ${mockedToken()}`)
             .send({
                 formData: {
                     name: "Conta Teste ID",
@@ -105,7 +114,7 @@ describe("BankAccount API", () => {
 
         const response = await request(app).get(
             `/finance/bankAccount/${newAccount.body._id}`
-        ); // Atualize o caminho da rota
+        ).set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
 
         console.log("Fetch By ID Response:", response.body); // Adicione um log para depuração
 
@@ -115,7 +124,8 @@ describe("BankAccount API", () => {
 
     it("should not fetch a bank account without ID", async () => {
         await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta Teste ID",
@@ -126,14 +136,14 @@ describe("BankAccount API", () => {
                 },
             });
 
-        const response = await request(app).get(`/finance/bankAccount/${null}`); // Atualize o caminho da rota
+        const response = await request(app).get(`/finance/bankAccount/${null}`).set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
 
         console.log("Fetch By ID Response:", response.body); // Adicione um log para depuração
 
         expect(response.status).toBe(500);
     });
     it("should fetch all bank accounts", async () => {
-        const response = await request(app).get("/finance/getBankAccount"); // Atualize o caminho da rota
+        const response = await request(app).get("/finance/getBankAccount").set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
 
         console.log("Fetch All Response:", response.body); // Adicione um log para depuração
 
@@ -143,7 +153,8 @@ describe("BankAccount API", () => {
 
     it("should update a bank account", async () => {
         const newAccount = await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta a ser Atualizada",
@@ -155,7 +166,8 @@ describe("BankAccount API", () => {
             });
 
         const response = await request(app)
-            .patch(`/finance/updateBankAccount/${newAccount.body._id}`) // Atualize o caminho da rota
+            .patch(`/finance/updateBankAccount/${newAccount.body._id}`)
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({ name: "Conta Atualizada" });
 
         console.log("Update Response:", response.body); // Adicione um log para depuração
@@ -166,7 +178,8 @@ describe("BankAccount API", () => {
 
     it("should not update a bank account without id", async () => {
         await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta a ser Atualizada",
@@ -178,7 +191,8 @@ describe("BankAccount API", () => {
             });
 
         const response = await request(app)
-            .patch(`/finance/updateBankAccount/${null}`) // Atualize o caminho da rota
+            .patch(`/finance/updateBankAccount/${null}`)
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({ name: "Conta Atualizada" });
 
         console.log("Update Response:", response.body); // Adicione um log para depuração
@@ -188,7 +202,8 @@ describe("BankAccount API", () => {
 
     it("should delete a bank account", async () => {
         const newAccount = await request(app)
-            .post("/finance/createBankAccount") // Atualize o caminho da rota
+            .post("/finance/createBankAccount")
+            .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({
                 formData: {
                     name: "Conta a ser Deletada",
@@ -201,7 +216,7 @@ describe("BankAccount API", () => {
 
         const response = await request(app).delete(
             `/finance/deleteBankAccount/${newAccount.body._id}`
-        ); // Atualize o caminho da rota
+        ).set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
 
         console.log("Delete Response:", response.body); // Adicione um log para depuração
 
@@ -211,7 +226,7 @@ describe("BankAccount API", () => {
     it("should delete a bank account", async () => {
         const response = await request(app).delete(
             `/finance/deleteBankAccount/${null}`
-        ); // Atualize o caminho da rota
+        ).set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
 
         expect(response.status).toBe(500);
     });
@@ -221,13 +236,13 @@ describe("BankAccount API", () => {
 
         const response = await request(app).get(
             `/finance/getBankAccountbyId/${invalidId}`
-        );
+        ).set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(response.status).toBe(404);
     });
 });
 it("should return 500 when fetching a bank account with invalid ID", async () => {
-    const response = await request(app).get(`/finance/bankAccount/${null}`);
+    const response = await request(app).get(`/finance/bankAccount/${null}`).set("Authorization", `Bearer ${mockedToken()}`);
 
     expect(response.status).toBe(500);
     expect(response.body.error).toBe("ID inválido ou ausente");
@@ -235,52 +250,58 @@ it("should return 500 when fetching a bank account with invalid ID", async () =>
 it("should return 500 when updating a bank account with invalid ID", async () => {
     const response = await request(app)
         .patch(`/finance/updateBankAccount/${null}`)
+        .set("Authorization", `Bearer ${mockedToken()}`)
         .send({ name: "Conta Atualizada" });
 
     expect(response.status).toBe(500);
     expect(response.body.error).toBe("ID inválido ou ausente");
 });
-    it("should delete a bank account", async () => {
+it("should delete a bank account", async () => {
     const newAccount = await request(app)
         .post("/finance/createBankAccount")
+        .set("Authorization", `Bearer ${mockedToken()}`)
         .send({
             formData: {
-                name: "Conta a ser Deletada",
+                name: "Conta a ser Deletada 2",
                 bank: "Banco Teste Deletar",
-                
+
                 accaccountNumber: "33333333",
                 status: "Ativo",
                 accountType: "Conta Corrente",
             },
-        }); const response = await request(app).delete(
+        });
+        
+        console.log("TESTEEEEEEEEEEEEEEEE", newAccount.body)
+        
+        const response = await request(app).delete(
             `/finance/deleteBankAccount/${newAccount.body._id}`
-        );
+        ).set("Authorization", `Bearer ${mockedToken()}`);
 
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe("Conta deletada com sucesso");
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Conta deletada com sucesso");
+});
 
-    it("should return 500 when deleting a bank account with invalid ID", async () => {
-        const response = await request(app).delete(`/finance/deleteBankAccount/${null}`);
+it("should return 500 when deleting a bank account with invalid ID", async () => {
+    const response = await request(app).delete(`/finance/deleteBankAccount/${null}`).set("Authorization", `Bearer ${mockedToken()}`);
 
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe("ID inválido ou ausente");
-    });
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe("ID inválido ou ausente");
+});
 
-    it("should return 500 if the name is invalid", async () => {
-        const response = await request(app)
-            .post("/finance/createBankAccount")
-            .send({
-                formData: {
-                    name: 12345, // Tipo inválido
-                    bank: "Banco Teste",
-                    accountNumber: "98765432",
-                    status: "Ativo",
-                    accountType: "Conta Corrente",
-                },
-            });
+it("should return 500 if the name is invalid", async () => {
+    const response = await request(app)
+        .post("/finance/createBankAccount")
+        .set("Authorization", `Bearer ${mockedToken()}`)
+        .send({
+            formData: {
+                name: 12345, // Tipo inválido
+                bank: "Banco Teste",
+                accountNumber: "98765432",
+                status: "Ativo",
+                accountType: "Conta Corrente",
+            },
+        });
 
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe("Tipo de dado incorreto");
-    });
-   
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe("Tipo de dado incorreto");
+});
