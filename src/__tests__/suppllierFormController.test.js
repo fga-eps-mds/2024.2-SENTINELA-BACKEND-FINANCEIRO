@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("../routes");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { mockedToken } = require('./utils.test')
+const { mockedToken } = require("./utils.test");
 
 const app = express();
 let mongoServer;
@@ -110,21 +110,27 @@ describe("Supplier Form Controller Tests", () => {
     });
 
     it("should get all supplier forms", async () => {
-        const res = await request(app).get("/SupplierForm").set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .get("/SupplierForm")
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
     });
 
     it("should get a supplier form by ID", async () => {
-        const res = await request(app).get(`/SupplierForm/${supplierId}`).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .get(`/SupplierForm/${supplierId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty("nome", "Test Supplier");
     });
 
     it("should fail get a supplier form without ID", async () => {
-        const res = await request(app).get(`/SupplierForm/${null}`).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .get(`/SupplierForm/${null}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(400);
     });
@@ -149,29 +155,27 @@ describe("Supplier Form Controller Tests", () => {
     });
 
     it("should delete a supplier form by ID", async () => {
-        const res = await request(app).delete(
-            `/SupplierForm/delete/${supplierId}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .delete(`/SupplierForm/delete/${supplierId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(200);
 
-        const checkSupplier = await request(app).get(
-            `/SupplierForm/delete/${supplierId}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const checkSupplier = await request(app)
+            .get(`/SupplierForm/delete/${supplierId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
         expect(checkSupplier.status).toBe(404);
     });
 
     it("should fail to delete a supplier form without ID", async () => {
-        const res = await request(app).delete(
-            `/SupplierForm/delete/${supplierId}`
-        ).set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
-        ;
-
+        const res = await request(app)
+            .delete(`/SupplierForm/delete/${supplierId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`); // Atualize o caminho da rota
         expect(res.status).toBe(200);
 
-        const checkSupplier = await request(app).get(
-            `/SupplierForm/delete/${supplierId}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const checkSupplier = await request(app)
+            .get(`/SupplierForm/delete/${supplierId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
         expect(checkSupplier.status).toBe(404);
     });
 });

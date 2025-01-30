@@ -5,7 +5,7 @@ const cors = require("cors");
 const routes = require("../routes");
 const financialMovementsModel = require("../Models/financialMovementsSchema");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { mockedToken } = require('./utils.test')
+const { mockedToken } = require("./utils.test");
 
 let mongoServer;
 let app = express();
@@ -93,9 +93,9 @@ describe("FinancialMovements API", () => {
                 contaOrigem: "Get By ID Mock",
             });
 
-        const res = await request(app).get(
-            `/financialMovements/${createdFMovements._id}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .get(`/financialMovements/${createdFMovements._id}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.body).toMatchObject(createdFMovements);
         expect(res.status).toBe(200);
@@ -104,7 +104,9 @@ describe("FinancialMovements API", () => {
     it("should get financial movements", async () => {
         const financialMovementsModelCount =
             await financialMovementsModel.countDocuments({});
-        const res = await request(app).get("/financialMovements").set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .get("/financialMovements")
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.body.length).toBe(financialMovementsModelCount);
         expect(res.status).toBe(200);
@@ -135,9 +137,9 @@ describe("FinancialMovements API", () => {
                 contaOrigem: "Delete By ID Mock",
             });
 
-        const res = await request(app).delete(
-            `/financialMovements/delete/${createdFMovements._id}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .delete(`/financialMovements/delete/${createdFMovements._id}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.body).toMatchObject(createdFMovements);
         expect(res.status).toBe(200);
@@ -168,9 +170,9 @@ describe("FinancialMovements API", () => {
                 contaOrigem: "Update By ID Mock",
             });
 
-        const res = await request(app).patch(
-            `/financialMovements/update/${createdFMovements._id}`
-        ).set("Authorization", `Bearer ${mockedToken()}`);
+        const res = await request(app)
+            .patch(`/financialMovements/update/${createdFMovements._id}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(200);
     });
@@ -180,24 +182,34 @@ describe("FinancialMovements API", () => {
             .post("/financialMovements/create")
             .set("Authorization", `Bearer ${mockedToken()}`)
             .send({}); // Enviar dados incompletos
-    
+
         expect(res.status).toBe(400);
         expect(res.body).toHaveProperty("error");
     });
     it("should return 404 if financial movement not found on GET by ID", async () => {
         const nonExistingId = "60f8e8b1d3b99c4b8c6c3bbd"; // ID fictício
-        const res = await request(app).get(`/financialMovements/${nonExistingId}`).set("Authorization", `Bearer ${mockedToken()}`);
-    
+        const res = await request(app)
+            .get(`/financialMovements/${nonExistingId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
+
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty("error", "Financial Movement not found");
+        expect(res.body).toHaveProperty(
+            "error",
+            "Financial Movement not found"
+        );
     });
-    
+
     it("should return 404 if financial movement not found on DELETE", async () => {
         const nonExistingId = "60f8e8b1d3b99c4b8c6c3bbd"; // ID fictício
-        const res = await request(app).delete(`/financialMovements/delete/${nonExistingId}`).set("Authorization", `Bearer ${mockedToken()}`);
-    
+        const res = await request(app)
+            .delete(`/financialMovements/delete/${nonExistingId}`)
+            .set("Authorization", `Bearer ${mockedToken()}`);
+
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty("error", "Financial Movement not found");
+        expect(res.body).toHaveProperty(
+            "error",
+            "Financial Movement not found"
+        );
     });
     it("should update a financial movement with partial data", async () => {
         const { body: createdFMovements } = await request(app)
@@ -222,17 +234,17 @@ describe("FinancialMovements API", () => {
                     descricao: "Pagamento de serviço",
                 },
             });
-    
+
         const updatedData = {
             nomeOrigem: "João Silva Atualizado",
             valorBruto: 1200,
         };
-    
+
         const res = await request(app)
             .patch(`/financialMovements/update/${createdFMovements._id}`)
             .set("Authorization", `Bearer ${mockedToken()}`)
             .send({ financialMovementsData: updatedData });
-    
+
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty("nomeOrigem", "João Silva Atualizado");
         expect(res.body).toHaveProperty("valorBruto", 1200);
@@ -261,15 +273,13 @@ describe("FinancialMovements API", () => {
                     descricao: "Pagamento de serviço",
                 },
             });
-    
+
         const res = await request(app)
             .patch(`/financialMovements/update/${createdFMovements._id}`)
             .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({ financialMovementsData: { baixada: true } });
-    
+
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty("baixada", true);
     });
-        
-                
 });

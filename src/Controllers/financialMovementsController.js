@@ -4,7 +4,6 @@ const validateCPF = (cpf) => {
     return /\d{3}\.\d{3}\.\d{3}-\d{2}/.test(cpf);
 };
 
-
 const createFinancialMovements = async (req, res) => {
     try {
         console.log("Dados recebidos:", req.body);
@@ -13,10 +12,10 @@ const createFinancialMovements = async (req, res) => {
             return res.status(400).send({ error: "No data provided" });
         }
         if (!validateCPF(financialMovementsData.cpFCnpj)) {
-            return res.status(400).send({ error: "Invalid CPF" });  
+            return res.status(400).send({ error: "Invalid CPF" });
         }
-        if (!financialMovementsData.contaOrigem) {  
-            throw new Error("Database error"); 
+        if (!financialMovementsData.contaOrigem) {
+            throw new Error("Database error");
         }
 
         // Criação da movimentação financeira

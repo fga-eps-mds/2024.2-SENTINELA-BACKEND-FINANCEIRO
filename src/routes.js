@@ -4,8 +4,7 @@ const bankAccountController = require("./Controllers/bankAccountController");
 const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
 const financialReportController = require("./Controllers/financialReportController");
-const {checkPermissions} = require("./Middlewares/accessControlMiddleware");
-
+const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
 // Rotas Contas Bancárias
 routes.post(
@@ -92,6 +91,5 @@ routes.post(
     checkPermissions("movimentacao_financeira_visualizar"),
     financialReportController.generateFinancialReport
 );
-
 
 module.exports = routes;
