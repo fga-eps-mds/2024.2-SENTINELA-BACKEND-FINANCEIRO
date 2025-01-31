@@ -3,6 +3,7 @@ const routes = express.Router();
 const bankAccountController = require("./Controllers/bankAccountController");
 const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
+const patrimonioController = require("./Controllers/patrimonioController");
 const financialReportController = require("./Controllers/financialReportController");
 const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
@@ -90,6 +91,32 @@ routes.post(
     "/financialMovements/report",
     checkPermissions("movimentacao_financeira_visualizar"),
     financialReportController.generateFinancialReport
+);
+//rotas patrimonio
+routes.post(
+    "/patrimonio/create",
+    checkPermissions("patrimonio_criar"),
+    patrimonioController.createpatrimonio
+);
+routes.get(
+    "/patrimonio",
+    checkPermissions("patrimonio_visualizar"),
+    patrimonioController.getpatrimonio
+);
+routes.get(
+    "/patrimonio/:id",
+    checkPermissions("patrimonio_visualizar"),
+    patrimonioController.getpatrimonioById
+);
+routes.delete(
+    "/patrimonio/delete/:id",
+    checkPermissions("patrimonio_deletar"),
+    patrimonioController.deletepatrimonioById
+);
+routes.patch(
+    "/patrimonio/update/:id",
+    checkPermissions("patrimonio_editar"),
+    patrimonioController.updatepatrimonioById
 );
 
 module.exports = routes;
