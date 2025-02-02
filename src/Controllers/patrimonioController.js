@@ -11,9 +11,6 @@ const createpatrimonio = async (req, res) => {
         if (!patrimonioData) {
             return res.status(400).send({ error: "No data provided" });
         }
-        if (!patrimonioData.nome) {
-            throw new Error("Database error");
-        }
 
         // Criação da movimentação financeira
         const patrimonio = new Patrimonio(
@@ -56,7 +53,7 @@ const getpatrimonioById = async (req, res) => {
 const deletepatrimonioById = async (req, res) => {
     try {
         const deletedpatrimonio =
-            await patrimonio.findByIdAndDelete(req.params.id);
+            await Patrimonio.findByIdAndDelete(req.params.id);
         if (!deletedpatrimonio) {
             return res
                 .status(404)
@@ -70,7 +67,7 @@ const deletepatrimonioById = async (req, res) => {
 
 const updatepatrimonioById = async (req, res) => {
     try {
-        const patrimonio = await patrimonio.findById(
+        const patrimonio = await Patrimonio.findById(
             req.params.id
         );
         if (!patrimonio) {
