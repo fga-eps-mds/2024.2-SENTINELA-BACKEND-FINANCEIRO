@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
 const FinancialMovements = require("./Models/financialMovementsSchema");
+const Patrimonio = require("./Models/patrimonioSchema");
 const { generateFinancialReportPDF } = require("./Models/pdfGenerator");
 const { generateFinancialReportCSV } = require("./Models/csvGenerator");
 
@@ -41,6 +42,16 @@ const getFinancialMovementsFromDatabase = async () => {
         return financialMovements;
     } catch (error) {
         console.error("Erro ao buscar movimentações financeiras:", error);
+        throw error;
+    }
+};
+
+const getpatrimonioFromDatabase = async () => {
+    try {
+        const patrimonio = await Patrimonio.find(); // Verifique se este modelo está correto
+        return patrimonio;
+    } catch (error) {
+        console.error("Erro ao buscar patrimonio:", error);
         throw error;
     }
 };

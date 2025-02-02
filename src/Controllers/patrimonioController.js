@@ -11,15 +11,12 @@ const createpatrimonio = async (req, res) => {
         if (!patrimonioData) {
             return res.status(400).send({ error: "No data provided" });
         }
-        /* if (!validateCPF(financialMovementsData.cpFCnpj)) {
-            return res.status(400).send({ error: "Invalid CPF" });  
-        } */
         if (!patrimonioData.nome) {
             throw new Error("Database error");
         }
 
         // Criação da movimentação financeira
-        const patrimonio = new patrimonio(
+        const patrimonio = new Patrimonio(
             patrimonioData
         );
         await patrimonio.save();
@@ -42,7 +39,7 @@ const getpatrimonio = async (req, res) => {
 
 const getpatrimonioById = async (req, res) => {
     try {
-        const patrimonio = await patrimonio.findById(
+        const patrimonio = await Patrimonio.findById(
             req.params.id
         );
         if (!patrimonio) {

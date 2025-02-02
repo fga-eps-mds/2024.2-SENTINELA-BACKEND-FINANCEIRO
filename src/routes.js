@@ -95,27 +95,27 @@ routes.post(
 //rotas patrimonio
 routes.post(
     "/patrimonio/create",
-    checkPermissions("patrimonio_criar"),
+    checkPermissions("movimentacao_financeira_criar"),
     patrimonioController.createpatrimonio
 );
 routes.get(
     "/patrimonio",
-    checkPermissions("patrimonio_visualizar"),
+    checkPermissions("movimentacao_financeira_visualizar"),
     patrimonioController.getpatrimonio
 );
 routes.get(
     "/patrimonio/:id",
-    checkPermissions("patrimonio_visualizar"),
+    checkPermissions("movimentacao_financeira_visualizar"),
     patrimonioController.getpatrimonioById
 );
 routes.delete(
     "/patrimonio/delete/:id",
-    checkPermissions("patrimonio_deletar"),
+    checkPermissions("movimentacao_financeira_deletar"),
     patrimonioController.deletepatrimonioById
 );
 routes.patch(
     "/patrimonio/update/:id",
-    checkPermissions("patrimonio_editar"),
+    checkPermissions("movimentacao_financeira_editar"),
     patrimonioController.updatepatrimonioById
 );
 
