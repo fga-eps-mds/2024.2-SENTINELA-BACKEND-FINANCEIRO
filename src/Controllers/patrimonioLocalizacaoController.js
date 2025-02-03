@@ -75,7 +75,7 @@ const updatepatrimonioLocalizacaoById = async (req, res) => {
                 .status(404)
                 .send({ error: "Patrimonio not found" });
         }
-        Object.assign(patrimonioLocalizacao, req.body.patrimonioData);
+        Object.assign(patrimonioLocalizacao, req.body.patrimonioLocalizacaoData);
         patrimonioLocalizacao.updatedAt = new Date();
         await patrimonioLocalizacao.save();
         return res.status(200).send(patrimonioLocalizacao);

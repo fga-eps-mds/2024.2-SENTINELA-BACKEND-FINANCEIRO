@@ -45,17 +45,6 @@ const getFinancialMovementsFromDatabase = async () => {
         throw error;
     }
 };
-
-const getpatrimonioFromDatabase = async () => {
-    try {
-        const patrimonio = await Patrimonio.find(); // Verifique se este modelo está correto
-        return patrimonio;
-    } catch (error) {
-        console.error("Erro ao buscar patrimonio:", error);
-        throw error;
-    }
-};
-
 app.get("/download-financial-report", async (req, res) => {
     try {
         const { format } = req.query;
