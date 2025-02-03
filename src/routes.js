@@ -5,6 +5,7 @@ const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
 const patrimonioController = require("./Controllers/patrimonioController");
 const financialReportController = require("./Controllers/financialReportController");
+const patrimonioLocalizacaoController = require("./Controllers/patrimonioLocalizacaoController")
 const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
 // Rotas Contas Bancárias
@@ -117,6 +118,32 @@ routes.patch(
     "/patrimonio/update/:id",
     checkPermissions("movimentacao_financeira_editar"),
     patrimonioController.updatepatrimonioById
+);
+
+routes.post(
+    "/patrimonioLocalizacao/create",
+    checkPermissions("movimentacao_financeira_criar"),
+    patrimonioLocalizacaoController.createpatrimonioLocalizacao
+);
+routes.get(
+    "/patrimonioLocalizacao",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioLocalizacaoController.getpatrimonioLocalizacao
+);
+routes.get(
+    "/patrimonioLocalizacao/:id",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioLocalizacaoController.getpatrimonioLocalizacaoById
+);
+routes.delete(
+    "/patrimonioLocalizacao/delete/:id",
+    checkPermissions("movimentacao_financeira_deletar"),
+    patrimonioLocalizacaoController.deletepatrimonioLocalizacaoById
+);
+routes.patch(
+    "/patrimonioLocalizacao/update/:id",
+    checkPermissions("movimentacao_financeira_editar"),
+    patrimonioLocalizacaoController.updatepatrimonioLocalizacaoById
 );
 
 module.exports = routes;

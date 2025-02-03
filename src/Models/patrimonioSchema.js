@@ -25,7 +25,7 @@ const patrimonioSchema = new mongoose.Schema({
     },
     localizacao: {
         type: String,
-        required: false, /*deve ser alterado depois*/
+        required: false, 
     },
     doacao: {
         type: Boolean,
