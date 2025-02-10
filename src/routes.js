@@ -5,8 +5,8 @@ const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
 const patrimonioController = require("./Controllers/patrimonioController");
 const financialReportController = require("./Controllers/financialReportController");
-const patrimonioLocalizacaoController = require("./Controllers/patrimonioLocalizacaoController")
-const LocalizacaoController = require("./Controllers/LocalizacaoController")
+const patrimonioLocalizacaoController = require("./Controllers/patrimonioLocalizacaoController");
+const LocalizacaoController = require("./Controllers/LocalizacaoController");
 const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
 // Rotas Contas Bancárias

@@ -88,8 +88,7 @@ describe("Patrimonio API", () => {
     });
 
     it("should get patrimonio", async () => {
-        const patrimonioModelCount =
-            await patrimonioModel.countDocuments({});
+        const patrimonioModelCount = await patrimonioModel.countDocuments({});
         const res = await request(app)
             .get("/patrimonio")
             .set("Authorization", `Bearer ${mockedToken()}`);
@@ -165,10 +164,7 @@ describe("Patrimonio API", () => {
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty(
-            "error",
-            "Patrimonio not found"
-        );
+        expect(res.body).toHaveProperty("error", "Patrimonio not found");
     });
 
     it("should return 404 if patrimonio not found on DELETE", async () => {
@@ -178,10 +174,7 @@ describe("Patrimonio API", () => {
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty(
-            "error",
-            "Patrimonio not found"
-        );
+        expect(res.body).toHaveProperty("error", "Patrimonio not found");
     });
     it("should update a patrimonio with partial data", async () => {
         const { body: createdpatrimonio } = await request(app)

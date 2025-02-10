@@ -13,9 +13,7 @@ const createlocalizacao = async (req, res) => {
         }
 
         // Criação da movimentação financeira
-        const localizacao = new Localizacao(
-            localizacaoData
-        );
+        const localizacao = new Localizacao(localizacaoData);
         await localizacao.save();
 
         res.status(201).send(localizacao);
@@ -36,13 +34,9 @@ const getlocalizacao = async (req, res) => {
 
 const getlocalizacaoById = async (req, res) => {
     try {
-        const localizacao = await Localizacao.findById(
-            req.params.id
-        );
+        const localizacao = await Localizacao.findById(req.params.id);
         if (!localizacao) {
-            return res
-                .status(404)
-                .send({ error: "Localizacao not found" });
+            return res.status(404).send({ error: "Localizacao not found" });
         }
         return res.status(200).send(localizacao);
     } catch (error) {
@@ -52,12 +46,11 @@ const getlocalizacaoById = async (req, res) => {
 
 const deletelocalizacaoById = async (req, res) => {
     try {
-        const deletedlocalizacao =
-            await Localizacao.findByIdAndDelete(req.params.id);
+        const deletedlocalizacao = await Localizacao.findByIdAndDelete(
+            req.params.id
+        );
         if (!deletedlocalizacao) {
-            return res
-                .status(404)
-                .send({ error: "Localizacao not found" });
+            return res.status(404).send({ error: "Localizacao not found" });
         }
         return res.status(200).send(deletedlocalizacao);
     } catch (error) {
@@ -67,13 +60,9 @@ const deletelocalizacaoById = async (req, res) => {
 
 const updatelocalizacaoById = async (req, res) => {
     try {
-        const localizacao = await Localizacao.findById(
-            req.params.id
-        );
+        const localizacao = await Localizacao.findById(req.params.id);
         if (!localizacao) {
-            return res
-                .status(404)
-                .send({ error: "Localizacao not found" });
+            return res.status(404).send({ error: "Localizacao not found" });
         }
         Object.assign(localizacao, req.body.localizacaoData);
         localizacao.updatedAt = new Date();

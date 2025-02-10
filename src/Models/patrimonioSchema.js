@@ -25,7 +25,7 @@ const patrimonioSchema = new mongoose.Schema({
     },
     localizacao: {
         type: String,
-        required: false, 
+        required: false,
     },
     doacao: {
         type: Boolean,
@@ -37,8 +37,5 @@ const patrimonioSchema = new mongoose.Schema({
     },
 });
 
-const patrimonio = mongoose.model(
-    "patrimonio",
-    patrimonioSchema
-);
+const patrimonio = mongoose.model("patrimonio", patrimonioSchema);
 module.exports = patrimonio;

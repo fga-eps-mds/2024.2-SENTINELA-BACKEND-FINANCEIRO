@@ -105,7 +105,9 @@ describe("PatrimonioLocalizacao API", () => {
             });
 
         const res = await request(app)
-            .delete(`/patrimonioLocalizacao/delete/${createdpatrimonioLocalizacao._id}`)
+            .delete(
+                `/patrimonioLocalizacao/delete/${createdpatrimonioLocalizacao._id}`
+            )
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.body).toMatchObject(createdpatrimonioLocalizacao);
@@ -127,7 +129,9 @@ describe("PatrimonioLocalizacao API", () => {
             });
 
         const res = await request(app)
-            .patch(`/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`)
+            .patch(
+                `/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`
+            )
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(200);
@@ -188,7 +192,9 @@ describe("PatrimonioLocalizacao API", () => {
         };
 
         const res = await request(app)
-            .patch(`/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`)
+            .patch(
+                `/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`
+            )
             .set("Authorization", `Bearer ${mockedToken()}`)
             .send({ patrimonioLocalizacaoData: updatedData });
 
@@ -213,7 +219,9 @@ describe("PatrimonioLocalizacao API", () => {
             });
 
         const res = await request(app)
-            .patch(`/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`)
+            .patch(
+                `/patrimonioLocalizacao/update/${createdpatrimonioLocalizacao._id}`
+            )
             .set("Authorization", `Bearer ${mockedToken()}`) // Atualize o caminho da rota
             .send({ patrimonioLocalizacaoData: { para: "Casa" } });
 

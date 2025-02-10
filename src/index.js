@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
 const FinancialMovements = require("./Models/financialMovementsSchema");
-const Patrimonio = require("./Models/patrimonioSchema");
 const { generateFinancialReportPDF } = require("./Models/pdfGenerator");
 const { generateFinancialReportCSV } = require("./Models/csvGenerator");
 

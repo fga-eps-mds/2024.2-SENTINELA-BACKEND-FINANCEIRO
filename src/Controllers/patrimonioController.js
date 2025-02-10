@@ -13,9 +13,7 @@ const createpatrimonio = async (req, res) => {
         }
 
         // Criação da movimentação financeira
-        const patrimonio = new Patrimonio(
-            patrimonioData
-        );
+        const patrimonio = new Patrimonio(patrimonioData);
         await patrimonio.save();
 
         res.status(201).send(patrimonio);
@@ -36,13 +34,9 @@ const getpatrimonio = async (req, res) => {
 
 const getpatrimonioById = async (req, res) => {
     try {
-        const patrimonio = await Patrimonio.findById(
-            req.params.id
-        );
+        const patrimonio = await Patrimonio.findById(req.params.id);
         if (!patrimonio) {
-            return res
-                .status(404)
-                .send({ error: "Patrimonio not found" });
+            return res.status(404).send({ error: "Patrimonio not found" });
         }
         return res.status(200).send(patrimonio);
     } catch (error) {
@@ -52,12 +46,11 @@ const getpatrimonioById = async (req, res) => {
 
 const deletepatrimonioById = async (req, res) => {
     try {
-        const deletedpatrimonio =
-            await Patrimonio.findByIdAndDelete(req.params.id);
+        const deletedpatrimonio = await Patrimonio.findByIdAndDelete(
+            req.params.id
+        );
         if (!deletedpatrimonio) {
-            return res
-                .status(404)
-                .send({ error: "Patrimonio not found" });
+            return res.status(404).send({ error: "Patrimonio not found" });
         }
         return res.status(200).send(deletedpatrimonio);
     } catch (error) {
@@ -67,13 +60,9 @@ const deletepatrimonioById = async (req, res) => {
 
 const updatepatrimonioById = async (req, res) => {
     try {
-        const patrimonio = await Patrimonio.findById(
-            req.params.id
-        );
+        const patrimonio = await Patrimonio.findById(req.params.id);
         if (!patrimonio) {
-            return res
-                .status(404)
-                .send({ error: "Patrimonio not found" });
+            return res.status(404).send({ error: "Patrimonio not found" });
         }
         Object.assign(patrimonio, req.body.patrimonioData);
         patrimonio.updatedAt = new Date();

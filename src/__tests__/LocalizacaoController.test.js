@@ -74,8 +74,7 @@ describe("Localizacao API", () => {
     });
 
     it("should get localizacao", async () => {
-        const localizacaoModelCount =
-            await LocalizacaoModel.countDocuments({});
+        const localizacaoModelCount = await LocalizacaoModel.countDocuments({});
         const res = await request(app)
             .get("/localizacao")
             .set("Authorization", `Bearer ${mockedToken()}`);
@@ -137,10 +136,7 @@ describe("Localizacao API", () => {
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty(
-            "error",
-            "Localizacao not found"
-        );
+        expect(res.body).toHaveProperty("error", "Localizacao not found");
     });
 
     it("should return 404 if localizacao not found on DELETE", async () => {
@@ -150,10 +146,7 @@ describe("Localizacao API", () => {
             .set("Authorization", `Bearer ${mockedToken()}`);
 
         expect(res.status).toBe(404);
-        expect(res.body).toHaveProperty(
-            "error",
-            "Localizacao not found"
-        );
+        expect(res.body).toHaveProperty("error", "Localizacao not found");
     });
     it("should update a localizacao with partial data", async () => {
         const { body: createdlocalizacao } = await request(app)

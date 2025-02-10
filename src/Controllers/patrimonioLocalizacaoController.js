@@ -7,7 +7,8 @@ const PatrimonioLocalizacao = require("../Models/patrimonioLocalizacaoSchema");
 const createpatrimonioLocalizacao = async (req, res) => {
     try {
         console.log("Dados recebidos:", req.body);
-        const patrimonioLocalizacaoData = req.body.patrimonioLocalizacaoData || {};
+        const patrimonioLocalizacaoData =
+            req.body.patrimonioLocalizacaoData || {};
         if (!patrimonioLocalizacaoData) {
             return res.status(400).send({ error: "No data provided" });
         }
@@ -71,11 +72,12 @@ const updatepatrimonioLocalizacaoById = async (req, res) => {
             req.params.id
         );
         if (!patrimonioLocalizacao) {
-            return res
-                .status(404)
-                .send({ error: "Patrimonio not found" });
+            return res.status(404).send({ error: "Patrimonio not found" });
         }
-        Object.assign(patrimonioLocalizacao, req.body.patrimonioLocalizacaoData);
+        Object.assign(
+            patrimonioLocalizacao,
+            req.body.patrimonioLocalizacaoData
+        );
         patrimonioLocalizacao.updatedAt = new Date();
         await patrimonioLocalizacao.save();
         return res.status(200).send(patrimonioLocalizacao);
