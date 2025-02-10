@@ -3,7 +3,10 @@ const routes = express.Router();
 const bankAccountController = require("./Controllers/bankAccountController");
 const supplierFormController = require("./Controllers/supplierFormController");
 const financialMovementsController = require("./Controllers/financialMovementsController");
+const patrimonioController = require("./Controllers/patrimonioController");
 const financialReportController = require("./Controllers/financialReportController");
+const patrimonioLocalizacaoController = require("./Controllers/patrimonioLocalizacaoController");
+const LocalizacaoController = require("./Controllers/LocalizacaoController");
 const { checkPermissions } = require("./Middlewares/accessControlMiddleware");
 
 // Rotas Contas Bancárias
@@ -90,6 +93,84 @@ routes.post(
     "/financialMovements/report",
     checkPermissions("movimentacao_financeira_visualizar"),
     financialReportController.generateFinancialReport
+);
+//rotas patrimonio
+routes.post(
+    "/patrimonio/create",
+    checkPermissions("movimentacao_financeira_criar"),
+    patrimonioController.createpatrimonio
+);
+routes.get(
+    "/patrimonio",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioController.getpatrimonio
+);
+routes.get(
+    "/patrimonio/:id",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioController.getpatrimonioById
+);
+routes.delete(
+    "/patrimonio/delete/:id",
+    checkPermissions("movimentacao_financeira_deletar"),
+    patrimonioController.deletepatrimonioById
+);
+routes.patch(
+    "/patrimonio/update/:id",
+    checkPermissions("movimentacao_financeira_editar"),
+    patrimonioController.updatepatrimonioById
+);
+
+routes.post(
+    "/patrimonioLocalizacao/create",
+    checkPermissions("movimentacao_financeira_criar"),
+    patrimonioLocalizacaoController.createpatrimonioLocalizacao
+);
+routes.get(
+    "/patrimonioLocalizacao",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioLocalizacaoController.getpatrimonioLocalizacao
+);
+routes.get(
+    "/patrimonioLocalizacao/:id",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    patrimonioLocalizacaoController.getpatrimonioLocalizacaoById
+);
+routes.delete(
+    "/patrimonioLocalizacao/delete/:id",
+    checkPermissions("movimentacao_financeira_deletar"),
+    patrimonioLocalizacaoController.deletepatrimonioLocalizacaoById
+);
+routes.patch(
+    "/patrimonioLocalizacao/update/:id",
+    checkPermissions("movimentacao_financeira_editar"),
+    patrimonioLocalizacaoController.updatepatrimonioLocalizacaoById
+);
+
+routes.post(
+    "/localizacao/create",
+    checkPermissions("movimentacao_financeira_criar"),
+    LocalizacaoController.createlocalizacao
+);
+routes.get(
+    "/localizacao",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    LocalizacaoController.getlocalizacao
+);
+routes.get(
+    "/localizacao/:id",
+    checkPermissions("movimentacao_financeira_visualizar"),
+    LocalizacaoController.getlocalizacaoById
+);
+routes.delete(
+    "/localizacao/delete/:id",
+    checkPermissions("movimentacao_financeira_deletar"),
+    LocalizacaoController.deletelocalizacaoById
+);
+routes.patch(
+    "/localizacao/update/:id",
+    checkPermissions("movimentacao_financeira_editar"),
+    LocalizacaoController.updatelocalizacaoById
 );
 
 module.exports = routes;

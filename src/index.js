@@ -44,7 +44,6 @@ const getFinancialMovementsFromDatabase = async () => {
         throw error;
     }
 };
-
 app.get("/download-financial-report", async (req, res) => {
     try {
         const { format } = req.query;
